@@ -1,0 +1,36 @@
+Select Queries:
+create table authentication (emailId varchar(50) NOT NULL,password varchar(30) NOT NULL, usertype varchar(10),
+currentlogin timestamp,lastlogin timestamp, primary key (emailId));
+ 
+
+
+create table participants (emailId varchar(50) NOT NULL,name varchar(50),age int, 
+CollegeName varchar(50),TeamName varchar(20), primary key (emailId));
+
+
+create table questions (questionId int(10) NOT NULL, questionType varchar(1000),weightage int(10),
+filePath varchar(50), contestId int(10), PRIMARY KEY (questionId,contestId), FOREIGN KEY (contestId) REFERENCES contest(ContestId) on DELETE CASCADE );
+
+
+create table submission_score (teamId int(10) NOT NULL, JudgeId int(10), submissionId int(10), 
+ContestId int(10),questionId int(10),score int(10), PRIMARY KEY (submissionId));
+
+
+
+create table submission_history (submissionId int(10) NOT NULL AUTO_INCREMENT, TeamId int(10), SubmissionTime timestamp,
+QuestionId int(10), SubmissionCount int(10), Score int(10), PRIMARY KEY (submissionId));
+
+
+create table contest (ContestId int(10) NOT NULL AUTO_INCREMENT,ContestType varchar(20),Contest_Start_time timestamp, Contest_End_Time timestamp,Description varchar(200), PRIMARY KEY (ContestId));
+
+Create table team (TeamId int(10) NOT NULL AUTO_INCREMENT, EmailId varchar(50) NOT NULL, TeamName varchar(20),TotalNo int(10), PRIMARY KEY(TeamId), FOREIGN KEY (EmailId) REFERENCES authentication (EmailId) on DELETE CASCADE);
+
+
+create table admin(EmailId varchar(40) NOT NULL , Name varchar(20), UserType varchar(20), PRIMARY KEY (EmailId), FOREIGN KEY (EmailId) REFERENCES authentication (EmailId) on DELETE CASCADE);
+
+create table Contest_Register( contestId int(10) NOT NULL AUTO_INCREMENT ,UserName varchar(20),UserType varchar(20), scores int(10), PRIMARY KEY(contestId), FOREIGN KEY (contestId) REFERENCES contest(contestId) ON DELETE CASCADE);
+Insert Queries:
+
+insert into Admin values (1,'Admin','admin@utdallas.edu','ADMIN');
+insert into authentication  values ('admin@utdallas.edu','password','ADMIN',now(),now());
+
