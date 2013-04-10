@@ -1,0 +1,186 @@
+<Begin File "Naveen-Tammineni-Assignment3.txt">
+(** Author: 	Naveen Tammineni **)
+(** Assignment : 3		 **)
+
+
+(** Question 1 **)
+Code for question 1.
+
+female(lisa).
+female(nancy).
+female(sarah).
+female(mary).
+female(susan).
+female(jill).
+female(ann).
+female(kim).
+female(martha).
+male(tony).
+male(abe).
+male(bill).
+male(john).
+male(rob).
+male(jack).
+male(phil).
+male(rick).
+male(jim).
+father(tony,abe).
+father(tony,sarah).
+father(abe,john).
+father(bill,susan).
+father(john,jill).
+father(rob,jack).
+father(rob,phil).
+father(jack,jim).
+mother(lisa,abe).
+mother(lisa,sarah).
+mother(nancy,john).
+mother(sarah,susan).
+mother(mary,jill).
+mother(susan,jack).
+mother(susan,phil).
+mother(kim,jim).
+parent(X,Y) :- father(X,Y).
+parent(X,Y) :- mother(X, Y).
+ancestor(X,Y) :- parent(X,Y).
+ancestor(X,Y) :- parent(X,Z), ancestor(Z,Y).
+sibling(X,Y) :- parent(Z,X), parent(Z,Y), (X \==Y).
+count(lisa,0).
+count(tony,0).
+count(X,C):-parent(Y,X),count(Y,K),C is K+1.
+cousin(X,Y):-ancestor(P,X),ancestor(Q,Y),count(X,C1),count(Y,C2),(C1=C2),not(X=Y),(P=Q),not(sibling(X,Y)).
+
+
+
+(** 	Question2 	**)
+
+plus(0,X,X).
+plus(s(X),Y,s(Z)) :- plus(X,Y,Z).
+times(0,_,0).
+times(s(X),Y,Z) :- plus(A,Y,Z), times(X,Y,A).
+fib(0,0).
+fib(s(0),s(0)).
+fib(s(s(X)),Z) :- fib(X,X1),
+fib(s(X),X2),
+plus(X1,X2,Z).
+factorial(0,s(0)).
+factorial(s(N),M) :- times(s(N),M1,M), factorial(N,M1).
+
+
+(**	Question3 	**)
+
+sumLists([],[],[],[]).
+sumLists([],[H2|T2],[H3|T3],[H|T]) :- sumLists([],T2,T3,T), H is H2+H3.
+sumLists([H1|T1],[],[H3|T3],[H|T]) :- sumLists(T1,[],T3,T), H is H1+H3.
+sumLists([H1|T1],[H2|T2],[],[H|T]) :- sumLists(T1,T2,[],T), H is H1+H2.
+sumLists([],[],[H3|T3],[H|T]) :- sumLists([],[],T3,T), H is H3.
+sumLists([],[H2|T2],[],[H|T]) :- sumLists([],T2,[],T), H is H2.
+sumLists([H1|T1],[],[],[H|T]) :- sumLists(T1,[],[],T), H is H1.
+sumLists([H1|T1],[H2|T2],[H3|T3],[H|T]) :- sumLists(T1,T2,T3,T), H is H1+H2+H3.
+
+
+(**	Question4 	**)
+
+hanoi(N, _, _, _) :- N==0.
+hanoi(N, A, B, C) :- N1 is N-1, hanoi(N1, A, C, B), write([A, 'to', B]), nl, hanoi(N1, C, B, A).
+
+(**	 Question5	**)
+
+member( X, [X|_]).
+member( X, [H|T]) :- member(X,T).
+union([],[X|Y],[X|Y]).
+union([X|Y],[],[X|Y]).
+union([X|Y], R, Result) :- member(X,R), union(Y,R,Result).
+union([X|Y], R, [X|Result]) :- not(member(X,R)), union(Y,R,Result).
+intersection([],_,[]).
+intersection([X|Y], A, [X|Result]) :- member(X,A), intersection(Y,A, Result).
+intersection([X|Y], A, Result) :- not(member(X,A)), intersection(Y,A, Result).
+setdiff([],_,[]).
+setdiff(R,[],R).
+setdiff([X|Y],M,[X|Result]) :- not(member(X,M)), setdiff(Y,M,Result).
+setdiff([X|Y],M,Result) :- member(X,M), setdiff(Y,M,Result).
+subset([],_).
+subset([X|Y],R) :- member(X,R), subset(Y,R).
+
+
+(** 	Question6 	**)
+
+
+select(X,[X|T],T).
+select(X,[Y|T],[Y|R]) :- select(X,T,R).
+% solve(A):- solve([S,E,N,D,M,O,R,Y]).
+solve([S,E,N,D,M,O,R,Y]) :- select(D,[0,1,2,3,4,5,6,7,8,9],R1),
+select(E,R1,R2),
+Y is (D+E) mod 10,
+C1 is (D+E) //10,
+select(Y,R2,R3),
+select(N,R3,R4),
+select(R,R4,R5),
+E is (N+R+C1) mod 10,
+C2 is (N+R+C1) //10,
+select(O,R5,R6),
+N is (E+O+C2) mod 10,
+C3 is (E+O+C2) // 10,
+select(S,R6,R7),
+select(M,R7,_),
+O is (S+M+C3) mod 10,
+M is (S+M+C3) // 10.
+
+(** 	Question7 	**)
+
+
+mergesort([],[]).
+mergesort([A],[A]).
+mergesort([A,B|Rest],S) :- divide([A,B|Rest],L1,L2),
+mergesort(L1,S1),mergesort(L2,S2),
+my_merge(S1,S2,S).
+divide([],[],[]).
+divide([A],[A],[]).
+divide([A,B|R],[A|Ra],[B|Rb]) :- divide(R,Ra,Rb).
+my_merge(A,[],A).
+my_merge([],B,B).
+my_merge([A|Ra],[B|Rb],[A|M]) :- A =< B, my_merge(Ra,[B|Rb],M).
+my_merge([A|Ra],[B|Rb],[B|M]) :- A > B, my_merge([A|Ra],Rb,M).
+
+
+(** 	Question8 	**)
+
+triangle(N) :- N<0 ; N == 0.
+triangle(N) :- N>0, 1 is N mod 2, N1 is (N-1)/2, fun1(N1, 0).
+fun1(N1, I) :- I == N1.
+fun1(N1, I) :- Temp is I+1,
+Ic2 = Temp-1, fun2(N1, Ic2),
+forwardSlash(0),
+T is Temp-1, IBlank is (2*T), blank(IBlank, 0),
+backwardSlash(0),
+fun2(N1, Ic2),
+newLine(X), fun1(N1, Temp).
+fun2(N1, Ic2) :- Ic2 == N1.
+fun2(N1, Ic2) :- write(' '), Temp is Ic2+1, fun2(N1, Temp).
+forwardSlash(0) :- write('/').
+blank(IBlank, I) :- IBlank == 0; I == IBlank.
+blank(IBlank, I) :- write('_'), Temp is I+1, blank(IBlank, Temp).
+backwardSlash(0) :- write(\).
+newLine(X) :- nl.
+
+
+(** 	Question9 	**)
+
+select(X,[X|T],T).
+select(X,[Y|T],[Y|R]) :- select(X,T,R).
+
+solve([],[A],[Z],C,B) :- Z is A+C, Z =< 10.
+solve([],[A],[Z1,Z2],C,B) :- Z1 is (A+C) mod 10, Z2 = 1.
+solve([H1|T1],[H2|T2],[H3,T3],C,B) :-
+(var(H1) -> select(H1,B,B1); B1 = B),
+(var(H2) -> select(H2,B1,B2); B2 = B1),
+T is (H1+H2+C) mod 10,
+CN is (H1+H2+C) // 10,
+(var(H3) -> H3 = T,
+select(H3,B2,B3);
+H3 = T, B3 = B2),
+solve(T1,T2,T3,CN,B3).
+
+
+
+ <end file>
